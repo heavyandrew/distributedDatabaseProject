@@ -147,6 +147,7 @@ CREATE TABLE PartsInService (
     PS_id SERIAL PRIMARY KEY,
     PS_service_id INT NOT NULL,
     PS_part_id INT NOT NULL,
+    PS_number INT DEFAULT 0 (PS_number >= 0)
     CONSTRAINT fk_service_id FOREIGN KEY (PS_service_id) REFERENCES Branches(S_id),
     CONSTRAINT fk_part_id FOREIGN KEY (PS_part_id) REFERENCES ModelsOfParts(MP_id)
 );
@@ -154,8 +155,8 @@ CREATE TABLE PartsInService (
 -- Table: ServicesInOrders
 CREATE TABLE ServicesInOrders (
     SO_id SERIAL PRIMARY KEY,
-    SO_service_id INT NOT NULL,
-    SO_part INT NOT NULL,
+    SO_service_id INT,
+    SO_part INT,
     SO_order INT NOT NULL,
     CONSTRAINT fk_service FOREIGN KEY (SO_service_id) REFERENCES Services(S_id),
     CONSTRAINT fk_part FOREIGN KEY (SO_part) REFERENCES PartsInService(PS_id),
@@ -180,7 +181,7 @@ CREATE TABLE SupplyRequests (
 CREATE TABLE PartsInStock (
     PSt_id SERIAL PRIMARY KEY,
     PSt_part INT NOT NULL,
-    PSt_number INT DEFAULT 0,
+    PSt_number INT DEFAULT 0 CHECK (PSt_number >= 0),
     CONSTRAINT fk_part FOREIGN KEY (PSt_part) REFERENCES ModelsOfParts(MP_id)
 );
 
@@ -210,6 +211,7 @@ CREATE TABLE PartsInSupply (
     PSu_id SERIAL PRIMARY KEY,
     PSu_part INT NOT NULL,
     PSu_supply INT NOT NULL,
+    PSu_number INT NOT NULL CHECK (PSu_number > 0)
     CONSTRAINT fk_part FOREIGN KEY (PSu_part) REFERENCES ModelsOfParts(MP_id),
     CONSTRAINT fk_supply FOREIGN KEY (PSu_supply) REFERENCES Supplies(Su_id)
 );

@@ -1,5 +1,4 @@
 BEGIN;
-
 -- Клиенты
 INSERT INTO Clients
     (S_name, S_phone, S_email, C_num_counter)

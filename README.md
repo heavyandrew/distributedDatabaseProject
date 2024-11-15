@@ -3,10 +3,13 @@
 ### Run db: 
 make run
 
-### Run migration:
+### Run migrations:
 make migrate
 
-(в Makefile указан конкретный файл миграции, пока не разобрался, как запустить все миграции, * почему-то не работает)
+### Add new migration
+1. Создать файл в ./sql_migrations
+2. Добавить его в ./Makefile docker-compose exec db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/<your_file_name>.sql
+
 
 ### Пример энв-файла
 

@@ -3,25 +3,14 @@
 ### Run db: 
 make run
 
-### Run migrations:
-make migrate
+### Накат миграций
+раскомментируем энвы в начале Makefile для чтения из .env.principal
+make migrate_1
 
-### Add new migration
-1. Создать файл в ./sql_migrations
-2. Добавить его в ./Makefile docker-compose exec db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/<your_file_name>.sql
+комментируем энвы в начале Makefile для чтения из .env.principal
+раскомментируем энвы в начале Makefile для чтения из .env.branch_1
+make migrate_2
 
-
-### Пример энв-файла
-
-POSTGRES_DB=mydatabase
-
-POSTGRES_USER=myuser
-
-POSTGRES_PASSWORD=mypassword
-
-POSTGRES_PORT=5432
-
-
-DJANGO_SECRET_KEY=mysecretkey
-
-DJANGO_DEBUG=True
+комментируем энвы в начале Makefile для чтения из .env.branch_1
+раскомментируем энвы в начале Makefile для чтения из .env.branch_2
+make migrate_3

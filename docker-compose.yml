@@ -1,17 +1,58 @@
-version: "3.8"
-
 services:
-  db:
+  principal:
     image: postgres:latest
     env_file:
-      - .env
+      - .env.principal
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
       - .:/app
+      - principal_data:/var/lib/postgresql/data
+      - ./db_configs/principal/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./db_configs/principal/pg_hba.conf:/etc/postgresql/pg_hba.conf
     networks:
       - backend
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+
+  branch_1:
+    image: postgres:latest
+    env_file:
+      - .env.branch_1
+    ports:
+      - "5433:5432"
+    volumes:
+      - .:/app
+      - branch_1_data:/var/lib/postgresql/data
+      - ./db_configs/branch_1/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./db_configs/branch_1/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./db_configs/branch_1/recovery.conf:/etc/postgresql/recovery.conf
+    networks:
+      - backend
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+
+  branch_2:
+    image: postgres:latest
+    env_file:
+      - .env.branch_2
+    ports:
+      - "5434:5432"
+    volumes:
+      - .:/app
+      - branch_2_data:/var/lib/postgresql/data
+      - ./db_configs/branch_2/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./db_configs/branch_2/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./db_configs/branch_2/recovery.conf:/etc/postgresql/recovery.conf
+    networks:
+      - backend
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+
+volumes:
+  principal_data:
+  branch_1_data:
+  branch_2_data:
+
+networks:
+  backend:
 
 #  web:
 #    build:
@@ -29,9 +70,3 @@ services:
 #      - db
 #    networks:
 #      - backend
-
-volumes:
-  db_data:
-
-networks:
-  backend:

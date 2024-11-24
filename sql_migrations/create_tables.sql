@@ -2,16 +2,18 @@ BEGIN;
 
 -- Table: Clients
 CREATE TABLE Clients (
-    S_id SERIAL PRIMARY KEY,
+    Branch_id INT NOT NULL,
+    S_id INT NOT NULL,
+    PRIMARY KEY (Branch_id, S_id),
     S_name VARCHAR(100) NOT NULL,
     S_phone VARCHAR(20) NOT NULL,
     S_email VARCHAR(50),
-    C_num_counter INT
+    C_num_counter INT DEFAULT 0 -- счетчик схожих email
 );
 
 -- Table: OrderStatuses
 CREATE TABLE OrderStatuses (
-    OS_id SERIAL PRIMARY KEY,
+    OS_id INT PRIMARY KEY,
     OS_status VARCHAR(20) NOT NULL
 );
 
@@ -61,9 +63,11 @@ CREATE TABLE Models (
 
 -- Table: Devices
 CREATE TABLE Devices (
-    D_id SERIAL PRIMARY KEY,
+    Branch_id INT NOT NULL,
+    D_id INT NOT NULL,
     D_model INT NOT NULL,
     D_description VARCHAR(2000),
+    PRIMARY KEY (Branch_id, D_id),
     CONSTRAINT fk_model FOREIGN KEY (D_model) REFERENCES Models(M_id)
 );
 
@@ -93,7 +97,8 @@ CREATE TABLE Employees (
 
 -- Table: Orders
 CREATE TABLE Orders (
-    O_id SERIAL PRIMARY KEY,
+    Branch_id INT NOT NULL,
+    O_id INT NOT NULL,
     O_client_id INT NOT NULL,
     O_status INT NOT NULL,
     O_employee INT NOT NULL,
@@ -101,19 +106,22 @@ CREATE TABLE Orders (
     O_note VARCHAR(100),
     O_date DATE NOT NULL,
     O_final_price DECIMAL(10, 2),
-    CONSTRAINT fk_client FOREIGN KEY (O_client_id) REFERENCES Clients(S_id),
+    PRIMARY KEY (Branch_id, O_id),
+    CONSTRAINT fk_client FOREIGN KEY (Branch_id, O_client_id) REFERENCES Clients(Branch_id, S_id),
     CONSTRAINT fk_status FOREIGN KEY (O_status) REFERENCES OrderStatuses(OS_id),
     CONSTRAINT fk_employee FOREIGN KEY (O_employee) REFERENCES Employees(E_id),
-    CONSTRAINT fk_device FOREIGN KEY (O_device) REFERENCES Devices(D_id)
+    CONSTRAINT fk_device FOREIGN KEY (Branch_id, O_device) REFERENCES Devices(Branch_id, D_id)
 );
 
 -- Table: Reviews
 CREATE TABLE Reviews (
-    R_id SERIAL PRIMARY KEY,
+    Branch_id INT NOT NULL,
+    R_id INT NOT NULL,
     R_order_id INT NOT NULL,
     R_score INT NOT NULL CHECK (R_score BETWEEN 1 AND 5),
     R_text VARCHAR(1000),
-    CONSTRAINT fk_order_id FOREIGN KEY (R_order_id) REFERENCES Orders(O_id)
+    PRIMARY KEY (Branch_id, R_id),
+    CONSTRAINT fk_order_id FOREIGN KEY (Branch_id, R_order_id) REFERENCES Orders(Branch_id, O_id)
 );
 
 -- Table: PartTypes
@@ -144,10 +152,11 @@ CREATE TABLE ModelsOfParts (
 
 -- Table: PartsInService
 CREATE TABLE PartsInService (
-    PS_id SERIAL PRIMARY KEY,
+    PS_id INT NOT NULL,
     PS_service_id INT NOT NULL,
     PS_part_id INT NOT NULL,
     PS_number INT DEFAULT 0,
+    PRIMARY KEY (PS_service_id, PS_id),
     CONSTRAINT chk_ps_number CHECK (PS_number >= 0),
     CONSTRAINT fk_service_id FOREIGN KEY (PS_service_id) REFERENCES Branches(S_id),
     CONSTRAINT fk_part_id FOREIGN KEY (PS_part_id) REFERENCES ModelsOfParts(MP_id)
@@ -155,48 +164,35 @@ CREATE TABLE PartsInService (
 
 -- Table: ServicesInOrders
 CREATE TABLE ServicesInOrders (
-    SO_id SERIAL PRIMARY KEY,
+    SO_id INT NOT NULL,
     SO_service_id INT,
     SO_part INT,
     SO_order INT NOT NULL,
+    PRIMARY KEY (SO_service_id, SO_id),
     CONSTRAINT fk_service FOREIGN KEY (SO_service_id) REFERENCES Services(S_id),
-    CONSTRAINT fk_part FOREIGN KEY (SO_part) REFERENCES PartsInService(PS_id),
-    CONSTRAINT fk_order FOREIGN KEY (SO_order) REFERENCES Orders(O_id)
+    CONSTRAINT fk_part FOREIGN KEY (SO_service_id, SO_part) REFERENCES PartsInService(PS_service_id, PS_id),
+    CONSTRAINT fk_order FOREIGN KEY (SO_service_id, SO_order) REFERENCES Orders(Branch_id, O_id)
 );
 
 -- Table: SupplyRequests
 CREATE TABLE SupplyRequests (
-    SR_id SERIAL PRIMARY KEY,
+    Branch_id INT NOT NULL,
+    SR_id INT NOT NULL,
     SR_part INT NOT NULL,
     SR_number INT CHECK (SR_number > 0),
     SR_service INT NOT NULL,
     SR_created_at DATE NOT NULL,
     SR_closed_at DATE,
     SR_status INT DEFAULT 1 NOT NULL,
+    PRIMARY KEY (Branch_id, SR_id),
     CONSTRAINT fk_part FOREIGN KEY (SR_part) REFERENCES ModelsOfParts(MP_id),
     CONSTRAINT fk_service FOREIGN KEY (SR_service) REFERENCES Branches(S_id),
     CONSTRAINT fk_status FOREIGN KEY (SR_status) REFERENCES RequestStatuses(RS_id)
 );
 
--- Table: PartsInStock
-CREATE TABLE PartsInStock (
-    PSt_id SERIAL PRIMARY KEY,
-    PSt_part INT NOT NULL,
-    PSt_number INT DEFAULT 0 CHECK (PSt_number >= 0),
-    CONSTRAINT fk_part FOREIGN KEY (PSt_part) REFERENCES ModelsOfParts(MP_id)
-);
-
--- Table: PartsToBuy
-CREATE TABLE PartsToBuy (
-    PB_id SERIAL PRIMARY KEY,
-    PB_part INT NOT NULL,
-    PB_number INT CHECK (PB_number > 0),
-    CONSTRAINT fk_part FOREIGN KEY (PB_part) REFERENCES ModelsOfParts(MP_id)
-);
-
 -- Table: Supplies
 CREATE TABLE Supplies (
-    Su_id SERIAL PRIMARY KEY,
+    Su_id INT PRIMARY KEY,
     Su_from_employee INT,
     Su_delivery_employee INT,
     Su_apply_employee INT,
@@ -209,12 +205,28 @@ CREATE TABLE Supplies (
 
 -- Table: PartsInSupply
 CREATE TABLE PartsInSupply (
-    PSu_id SERIAL PRIMARY KEY,
+    PSu_id INT PRIMARY KEY,
     PSu_part INT NOT NULL,
     PSu_supply INT NOT NULL,
     PSu_number INT NOT NULL CHECK (PSu_number > 0),
     CONSTRAINT fk_part FOREIGN KEY (PSu_part) REFERENCES ModelsOfParts(MP_id),
     CONSTRAINT fk_supply FOREIGN KEY (PSu_supply) REFERENCES Supplies(Su_id)
+);
+
+-- Table: PartsToBuy
+CREATE TABLE PartsToBuy (
+    PB_id SERIAL PRIMARY KEY,
+    PB_part INT NOT NULL,
+    PB_number INT CHECK (PB_number > 0),
+    CONSTRAINT fk_part FOREIGN KEY (PB_part) REFERENCES ModelsOfParts(MP_id)
+);
+
+-- Table: PartsInStock
+CREATE TABLE PartsInStock (
+    PSt_id SERIAL PRIMARY KEY,
+    PSt_part INT NOT NULL,
+    PSt_number INT DEFAULT 0 CHECK (PSt_number >= 0),
+    CONSTRAINT fk_part FOREIGN KEY (PSt_part) REFERENCES ModelsOfParts(MP_id)
 );
 
 COMMIT;

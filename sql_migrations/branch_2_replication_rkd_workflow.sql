@@ -1,0 +1,1 @@
+CREATE PUBLICATION branch2_workflow FOR TABLE Supplies, SupplyRequests;

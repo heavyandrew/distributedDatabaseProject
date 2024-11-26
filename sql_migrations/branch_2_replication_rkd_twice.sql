@@ -1,1 +1,0 @@
-CREATE PUBLICATION branch2_twice FOR TABLE PartsInService;

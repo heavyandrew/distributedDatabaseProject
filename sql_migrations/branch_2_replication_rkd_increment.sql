@@ -1,1 +1,0 @@
-CREATE PUBLICATION branch2_increment FOR TABLE Reviews, Devices, Orders, ServicesInOrders;

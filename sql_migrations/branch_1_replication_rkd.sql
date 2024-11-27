@@ -1,4 +1,4 @@
-BEGIN
+BEGIN;
 
 CREATE ROLE principal_user REPLICATION LOGIN PASSWORD 'principal_password';
 

@@ -31,3 +31,19 @@ h1 {
 .button:hover {
   background-color: #0056b3;
 }
+table {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 20px 10%;
+}
+th,
+td {
+  border: 1px solid #007bff;
+  padding: 10px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+th {
+  background-color: #007bff;
+  color: white;
+}

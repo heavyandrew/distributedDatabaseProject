@@ -32,7 +32,6 @@ const server = Bun.serve({
         if (routes.has(route)) {
             return ResponseWrappers.html(path.join(HTML_DIR, route));
         }
-
         return new Response("404");
     }
 });

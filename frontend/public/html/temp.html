@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Table Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+        }
+        .title {
+            font-size: 24px;
+        }
+        .home-button {
+            padding: 10px 15px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: #004494;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #007BFF;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title">Title</div>
+    <button class="home-button" onclick="window.location.href = '/'">Home</button>
+</header>
+
+<table>
+    <thead>
+        <tr>
+            <th>Заголовок 1</th>
+            <th>Заголовок 2</th>
+            <th>Заголовок 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Данные 1</td>
+            <td>Данные 2</td>
+            <td>Данные 3</td>
+        </tr>
+        <tr>
+            <td>Данные 4</td>
+            <td>Данные 5</td>
+            <td>Данные 6</td>
+        </tr>
+        <tr>
+            <td>Данные 7</td>
+            <td>Данные 8</td>
+            <td>Данные 9</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+
+Найти еще

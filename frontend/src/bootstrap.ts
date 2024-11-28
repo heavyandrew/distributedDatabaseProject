@@ -11,21 +11,20 @@ export async function bootstrap(): Promise<void> {
     for (const component of jsComponents) {
         const componentFile = Bun.file(path.join(componentsDir, component));
         let contents = await componentFile.text();
-
         const htmlComponentContent = contents.match(htmlSourcePattern);
 
         if (htmlComponentContent === null) {
-            return;
+            continue;
         }
         
         const htmlComponentName = component.split(".").slice(0, -1).join('') + ".html";
         const htmlComponent = await Bun.file(path.join(componentsDir, htmlComponentName)).text();
 
         if(htmlComponent === htmlComponentContent[1]) {
-            return;
+            continue;
         }
 
-        contents = contents.replace(htmlComponentContent[1], htmlComponent);
+        contents = contents.replace(htmlSourcePattern, ".innerHTML = `" + htmlComponent + "`");
         await Bun.write(componentFile, contents);
     }
 }

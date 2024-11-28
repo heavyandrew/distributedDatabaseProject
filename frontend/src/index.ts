@@ -1,32 +1,35 @@
 import path from "node:path";
-import fs from "node:fs";
+import fs from "node:fs/promises";
 
-const html = path.join(process.cwd(), "src", "public", "html");
-const manifest = path.join(process.cwd(), "src", "public", "manifest");
+import { bootstrap } from "./bootstrap";
+import { ResponseWrappers } from "./ResponseWrappers";
 
-const routes = new Set(fs.readdirSync(html));
-console.log(routes);
+const PUBLIC_DIR = path.join(process.cwd(), "public");
+const HTML_DIR = path.join(PUBLIC_DIR, "html");
+const MANIFEST_DIR = path.join(PUBLIC_DIR, "manifest");
 
+const routes = new Set(await fs.readdir(HTML_DIR));
+
+await bootstrap();
 const server = Bun.serve({
     static: {
-        "/favicon.ico": new Response(await Bun.file(path.join(manifest, "favicon.ico")).bytes(), {
-            headers: {"Content-Type": "image/x-icon"}
-        }),
-        "/": new Response(await Bun.file(path.join(html, "index.html")).bytes(), {
-            headers: {"Content-Type": "text/html"}
-        }),
+        "/favicon.ico": await ResponseWrappers.xIcon(path.join(MANIFEST_DIR, "favicon.ico")),
+        "/": await ResponseWrappers.html(path.join(HTML_DIR, "index.html")),
     },
 
     port: process.env.PORT,
-
-    fetch(req: Request) {
+    async fetch(req: Request) {
         const url = new URL(req.url);
-        if(routes.has(url.pathname.slice(1))) {
-            return new Response(Bun.file(path.join(html, url.pathname + ".html")), {
-                headers: {
-                    "Content-type": "text/html",
-                }
-            })
+        if (url.pathname.endsWith(".js")) {
+            const filePath = path.join(PUBLIC_DIR, url.pathname);
+            if (await fs.exists(filePath)) {
+                return ResponseWrappers.js(path.join(PUBLIC_DIR, url.pathname))
+            }
+        }
+
+        const route = url.pathname.slice(1) + ".html";
+        if (routes.has(route)) {
+            return ResponseWrappers.html(path.join(HTML_DIR, route));
         }
         return new Response("404");
     }

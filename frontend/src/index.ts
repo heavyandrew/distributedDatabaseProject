@@ -15,11 +15,12 @@ const server = Bun.serve({
     static: {
         "/favicon.ico": await ResponseWrappers.xIcon(path.join(MANIFEST_DIR, "favicon.ico")),
         "/": await ResponseWrappers.html(path.join(HTML_DIR, "index.html")),
+        "/css/index.css": await ResponseWrappers.css(path.join(PUBLIC_DIR, "css", "index.css")),
     },
-
     port: process.env.PORT,
     async fetch(req: Request) {
         const url = new URL(req.url);
+
         if (url.pathname.endsWith(".js")) {
             const filePath = path.join(PUBLIC_DIR, url.pathname);
             if (await fs.exists(filePath)) {
@@ -31,6 +32,7 @@ const server = Bun.serve({
         if (routes.has(route)) {
             return ResponseWrappers.html(path.join(HTML_DIR, route));
         }
+
         return new Response("404");
     }
 });

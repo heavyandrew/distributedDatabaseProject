@@ -12,13 +12,14 @@ class Header extends HTMLElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        height: 5vh;
         padding: 10px 20px;
         background-color: #007BFF;
         color: white;
     }
 
     .title {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: Arial, sans-serif;
         font-size: 24px;
     }
 
@@ -40,7 +41,7 @@ class Header extends HTMLElement {
 <header>
     <div class="title">__Title__</div>
     <button class="home-button" onclick="window.location.href = '/'">На главную</button>
-</header>`.replaceAll("__Title__", this.getAttribute("title"));
+</header>`.replace("__Title__", this.getAttribute("title"));
 
         return headerTemplate;
     }

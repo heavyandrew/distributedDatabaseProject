@@ -17,6 +17,7 @@ down:
 migrate_custom:
 	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch2_replication_rok.sql
 
+# добавление данных в БД центра + репликация РОК из ц в ф (создание публикации)
 migrate_1:
 	docker-compose exec principal psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/create_tables.sql
 	docker-compose exec principal psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/principal_data.sql
@@ -24,17 +25,42 @@ migrate_1:
 	docker-compose exec principal psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_2_data.sql
 	docker-compose exec principal psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/principal_replication_rok.sql
 
+# добавление данных в БД филиала 1 + репликация РОК из ц в ф (создание подписки)
 migrate_2:
 	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/create_tables.sql
 	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/principal_data.sql
 	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_1_data.sql
 	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch1_replication_rok.sql
 
+# добавление данных в БД филиала 2 + репликация РОК из ц в ф (создание подписки)
 migrate_3:
 	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/create_tables.sql
 	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/principal_data.sql
 	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_2_data.sql
 	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch2_replication_rok.sql
+
+# Шаг 1: Настройка РКД и представлений для РБОК в branch_1
+migrate_4:
+	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_1_replication_rkd.sql
+	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_1_replication_rbok_publication.sql
+
+# Шаг 2: Настройка РКД и представлений для РБОК в branch_2
+migrate_5:
+	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_2_replication_rkd.sql
+	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_2_replication_rbok_publication.sql
+
+# Шаг 3: Подписка на РКД и РБОК в principal
+migrate_6:
+	docker-compose exec principal psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/principal_replication_rkd.sql
+	docker-compose exec principal psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/principal_replication_rbok_subscription.sql
+
+# Шаг 4: Подписка на РБОК в branch_1
+migrate_7:
+	docker-compose exec branch_1 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_1_replication_rbok_subscription.sql
+
+# Шаг 5: Подписка на РБОК в branch_2
+migrate_8:
+	docker-compose exec branch_2 psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -f app/sql_migrations/branch_2_replication_rbok_subscription.sql
 
 
 #create_tables:

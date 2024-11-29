@@ -5,35 +5,19 @@ class Position extends EventTarget {
     entity;
 
     /**
-     * @type {HTMLTableRowElement}
+     * 
      */
-    rowElem;
+    service;
 
     /**
      * 
      * @param {import("../hr-service").PositionEntity} entity 
+     * @param {import("../hr-service").HrService} service
      */
-    constructor(entity) {
+    constructor(entity, service) {
+        super();
+        this.service = service;
         this.entity = entity;
-
-        const nameData = document.createElement("td");
-        nameData.innerHTML = position.name;
-
-        const modifyData = document.createElement("td");
-        const modifyButton = document.createElement("button");
-        modifyButton.innerHTML = "Изменить";
-        modifyButton.onclick = 
-        modifyData.appendChild(modifyButton);
-
-        const deleteData = document.createElement("td");
-        const deleteButton = document.createElement("button");
-        modifyButton.innerHTML = "Удалить";
-        deleteData.appendChild(deleteButton);
-
-        this.rowElem = document.createElement("tr");
-        this.rowElem.appendChild(nameData);
-        this.rowElem.appendChild(modifyData);
-        this.rowElem.appendChild(deleteButton);
     }
 
     /**
@@ -51,46 +35,65 @@ class Position extends EventTarget {
     }
 
     /**
-     * @returns {HTMLTableRowElement}
-     */
-    getRowElement() {
-        return this.rowElem;
-    }
-
-    /**
      * 
-     * @param {MouseEvent} event 
+     * @param {string} value
      * @returns 
      */
-    async edit(event) {
-        const resp = await fetch("", {
-            body: {
-                id: this.entity.id,
-            }
+    async save(value) {
+        const result = await this.service.modifyPosition({
+            id: this.entity.id,
+            name: value,
         });
 
-        if(resp.status !== 200) {
-            return;
+        if(result) {
+            this.entity.name = value;
+            this.dispatchEvent(new Event("save"));
+        } else {
+            this.rowElem.firstChild.innerHTML = this.entity.name;
         }
-
-        this.entity.name = (await resp.json()).name;
-        this.dispatchEvent(new Event("edit"));        
     }
 
     /**
      * 
      */
     async delete() {
-        const resp = await fetch("", {
-            body: {
-                id: this.entity.id,
-            }
-        });
-
-        if(resp.status !== 200) {
-            return;
+        const result = await this.service.deletePosition(this.entity.id);
+        if(result) {
+            this.dispatchEvent(new Event("delete")); 
         }
-
-        this.dispatchEvent(new Event("delete")); 
     }
+}
+
+class PositionElementFactory {
+    /**
+     * 
+     * @param {string} name
+     * @returns {HTMLTableRowElement} 
+     */
+    create(name) {
+        const nameData = document.createElement("td");
+        nameData.innerHTML = name;
+        nameData.contentEditable = true;
+
+        const modifyData = document.createElement("td");
+        const modifyButton = document.createElement("button");
+        modifyButton.classList.add("save-button");
+        modifyButton.classList.add("mini");
+        modifyButton.innerHTML = "Сохранить";
+        modifyData.appendChild(modifyButton);
+
+        const deleteData = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("delete-button");
+        deleteButton.classList.add("mini");
+        deleteButton.innerHTML = "Удалить";
+        deleteData.appendChild(deleteButton);
+
+        const rowElem = document.createElement("tr");
+        rowElem.appendChild(nameData);
+        rowElem.appendChild(modifyData);
+        rowElem.appendChild(deleteData);
+        
+        return rowElem;
+    } 
 }

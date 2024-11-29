@@ -15,8 +15,7 @@ export async function bootstrap(): Promise<void> {
 
         if (htmlComponentContent === null) {
             continue;
-        }
-        
+        } 
         const htmlComponentName = component.split(".").slice(0, -1).join('') + ".html";
         const htmlComponent = await Bun.file(path.join(componentsDir, htmlComponentName)).text();
 

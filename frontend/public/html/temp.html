@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Styled Table Example</title>
+    <title>Editable Table Example</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,6 +55,41 @@
         tr:hover {
             background-color: #e0e0e0;
         }
+        .save-button {
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .save-button:hover {
+            background-color: #218838;
+        }
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .add-button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .add-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -64,34 +99,69 @@
     <button class="home-button" onclick="window.location.href = '/'">Home</button>
 </header>
 
-<table>
+<table id="dataTable">
     <thead>
         <tr>
             <th>Заголовок 1</th>
-            <th>Заголовок 2</th>
-            <th>Заголовок 3</th>
+            <th>Заголовок 2 (Редактируемый)</th>
+            <th>Действие</th>
+            <th>Удалить</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>Данные 1</td>
-            <td>Данные 2</td>
-            <td>Данные 3</td>
+            <td contenteditable="true">Данные 2</td>
+            <td><button class="save-button" onclick="saveData(this)">Сохранить</button></td>
+            <td><button class="delete-button" onclick="deleteRow(this)">Удалить</button></td>
         </tr>
         <tr>
             <td>Данные 4</td>
-            <td>Данные 5</td>
-            <td>Данные 6</td>
+            <td contenteditable="true">Данные 5</td>
+            <td><button class="save-button" onclick="saveData(this)">Сохранить</button></td>
+            <td><button class="delete-button" onclick="deleteRow(this)">Удалить</button></td>
         </tr>
         <tr>
             <td>Данные 7</td>
-            <td>Данные 8</td>
-            <td>Данные 9</td>
+            <td contenteditable="true">Данные 8</td>
+            <td><button class="save-button" onclick="saveData(this)">Сохранить</button></td>
+            <td><button class="delete-button" onclick="deleteRow(this)">Удалить</button></td>
         </tr>
     </tbody>
 </table>
 
+<button class="add-button" onclick="addRow()">Добавить</button>
+
+<script>
+    function saveData(button) {
+        const row = button.closest('tr');
+        const editableCell = row.querySelector('td[contenteditable="true"]');
+        const value = editableCell.innerText;
+        alert('Сохранено: ' + value);
+        // You can add further logic here to handle saving the data
+    }
+
+    function addRow() {
+        const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+        
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
+        const cell3 = newRow.insertCell(2);
+        const cell4 = newRow.insertCell(3);
+        
+        cell1.innerText = 'Новые Данные';
+        cell2.contentEditable = "true";
+        cell2.innerText = 'Редактируемые Данные';
+        cell3.innerHTML = '<button class="save-button" onclick="saveData(this)">Сохранить</button>';
+        cell4.innerHTML = '<button class="delete-button" onclick="deleteRow(this)">Удалить</button>';
+    }
+
+    function deleteRow(button) {
+        const row = button.closest('tr');
+        row.remove();
+    }
+</script>
+
 </body>
 </html>
-
-Найти еще

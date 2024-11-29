@@ -28,6 +28,9 @@ h1 {
   font-size: 16px;
   transition: background-color 0.3s;
 }
+.mini {
+  width: auto;
+}
 .button:hover {
   background-color: #0056b3;
 }
@@ -46,4 +49,40 @@ td {
 th {
   background-color: #007bff;
   color: white;
+}
+.save-button {
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.save-button:hover {
+  background-color: #218838;
+}
+.delete-button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.delete-button:hover {
+  background-color: #c82333;
+}
+.add-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  margin-left: 10%;
+}
+.add-button:hover {
+  background-color: #0056b3;
 }

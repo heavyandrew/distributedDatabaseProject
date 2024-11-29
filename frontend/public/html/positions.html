@@ -11,34 +11,65 @@
 
 <body>
     <c-header title="Должности"></c-header>
+
+    <button class="add-button" onclick="addRow()">Добавить</button>
     <table>
         <thead>
             <tr>
                 <th>Название</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
 
         </tbody>
     </table>
+
 </body>
 <script src="../js/hr-service.js"></script>
 <script src="../js/components/position.js" type="text/javascript"></script>
 <script>
     const tbdoy = document.querySelector("tbody");
+    const hrService = HrService.getInstance();
+    const positionFactory = new PositionElementFactory();
 
-    
+    function addRow() {
+        const elem = positionFactory.create("");
+        tbdoy.appendChild(elem);
+
+        const saveFn = async (e) => {
+            const result = await hrService.addPosition(position.getName());
+            if (result) {
+                tbdoy.removeChild(elem);
+                createPositionRow(result);
+            }
+        }
+
+        elem.childNodes[1].firstChild.onclick = saveFn;
+    }
+
     function onDelete(event) {
-        tbdoy.removeChild(event.target.getRowElem());
+        tbdoy.removeChild(event.target.getRowElement());
+    }
+
+    function createPositionRow(entity) {
+        const position = new Position(entity, hrService);
+        position.addEventListener("delete", onDelete);
+
+        const elem = positionFactory.create(position.getName());
+        elem.childNodes[1].firstChild.onclick = () => {
+            position.save(elem.firstChild.innerHTML);
+        }
+        elem.childNodes[2].firstChild.onclick = position.delete.bind(position);
+        tbdoy.appendChild(elem);
     }
 
     (async () => {
-        const positionEntities = await HrService.getInstance().getPositions();
+        const positionEntities = await hrService.getPositions();
 
         for (const entity of positionEntities) {
-            const position = new Position(entity); 
-            position.addEventListener("delete", onDelete);
-            tbdoy.appendChild(position.getRowElem());
+            createPositionRow(entity);
         }
     })();
 </script>

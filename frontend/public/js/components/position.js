@@ -36,20 +36,18 @@ class Position extends EventTarget {
 
     /**
      * 
-     * @param {string} value
+     * @param {Omit<import("../hr-service").PositionEntity, "id">} newEntity 
      * @returns 
      */
-    async save(value) {
+    async save(newEntity) {
         const result = await this.service.modifyPosition({
             id: this.entity.id,
-            name: value,
+            ...newEntity
         });
 
         if(result) {
-            this.entity.name = value;
+            this.entity = result;
             this.dispatchEvent(new Event("save"));
-        } else {
-            this.rowElem.firstChild.innerHTML = this.entity.name;
         }
     }
 
@@ -67,12 +65,12 @@ class Position extends EventTarget {
 class PositionElementFactory {
     /**
      * 
-     * @param {string} name
+     * @param {Omit<import("../hr-service").PositionEntity, "id">} pos
      * @returns {HTMLTableRowElement} 
      */
-    create(name) {
+    create(pos) {
         const nameData = document.createElement("td");
-        nameData.innerHTML = name;
+        nameData.innerHTML = pos.name;
         nameData.contentEditable = true;
 
         const modifyData = document.createElement("td");
@@ -93,7 +91,6 @@ class PositionElementFactory {
         rowElem.appendChild(nameData);
         rowElem.appendChild(modifyData);
         rowElem.appendChild(deleteData);
-        
         return rowElem;
     } 
 }

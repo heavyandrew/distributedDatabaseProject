@@ -35,33 +35,40 @@
     const positionFactory = new PositionElementFactory();
 
     function addRow() {
-        const elem = positionFactory.create("");
+        const elem = positionFactory.create({ name: "" });
         tbdoy.appendChild(elem);
 
         const saveFn = async (e) => {
-            const result = await hrService.addPosition(position.getName());
+            const result = await hrService.addPosition(elem.childNodes[0].innerHTML);
             if (result) {
                 tbdoy.removeChild(elem);
-                createPositionRow(result);
+                createRow(result);
             }
         }
 
         elem.childNodes[1].firstChild.onclick = saveFn;
     }
 
-    function onDelete(event) {
-        tbdoy.removeChild(event.target.getRowElement());
+    function onDelete(elem) {
+        tbdoy.removeChild(elem);
     }
 
-    function createPositionRow(entity) {
-        const position = new Position(entity, hrService);
-        position.addEventListener("delete", onDelete);
+    function onSave(elem, position) {
+        elem.childNodes[0].innerHTML = position.getName(); 
+    }
 
-        const elem = positionFactory.create(position.getName());
-        elem.childNodes[1].firstChild.onclick = () => {
-            position.save(elem.firstChild.innerHTML);
+    function createRow(entity) {
+        const position = new Position(entity, hrService);
+
+        const elem = positionFactory.create(position.entity);
+        position.addEventListener("delete", onDelete.bind(null, elem));
+        position.addEventListener("save", onSave.bind(null, elem, position));
+        const children = Array.from(elem.childNodes);
+
+        children.at(-2).firstChild.onclick = () => {
+            position.save({ name: elem.firstChild.innerHTML });
         }
-        elem.childNodes[2].firstChild.onclick = position.delete.bind(position);
+        children.at(-1).firstChild.onclick = position.delete.bind(position);
         tbdoy.appendChild(elem);
     }
 
@@ -69,7 +76,7 @@
         const positionEntities = await hrService.getPositions();
 
         for (const entity of positionEntities) {
-            createPositionRow(entity);
+            createRow(entity);
         }
     })();
 </script>

@@ -11,4 +11,9 @@ export namespace ResponseWrappers {
     export const xIcon = baseWrapper("image/x-icon");
     export const js = baseWrapper("text/javascript");
     export const css = baseWrapper("text/css");
+    export const json = async (body: BodyInit, headers?: HeadersInit) => {
+        return new Response(body, {
+            headers: { ...headers, "Content-type": "application/json" },
+        })
+    };
 }

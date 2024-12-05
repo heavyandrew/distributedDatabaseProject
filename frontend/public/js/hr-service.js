@@ -4,6 +4,11 @@ class HrService {
      */
     static instance = new HrService();
 
+    /**
+     * @type {Array<PositionEntity>}
+     */
+    positionsCache;
+
     url = "http://localhost/api";
 
     /**
@@ -18,11 +23,16 @@ class HrService {
      * @returns {Promise<PositionEntity[]>}
      */
     async getPositions() {
+        if(this.positionsCache) {
+            return this.positionsCache;
+        }
         const res = await fetch(this.url + "/positions", {
             method: "GET",
         });
 
-        return res.json().then((b) => b.payload);
+        this.positionsCache = res.json().then((b) => b.payload);
+
+        return this.positionsCache;
     }
 
     /**
@@ -108,7 +118,7 @@ class HrService {
 
 /**
  * @typedef {Object} EmployeeEntity
- * @property {string} id - Идентификатор сотрудника.
+ * @property {number} id - Идентификатор сотрудника.
  * @property {string} lastname - Фамилия сотрудника.
  * @property {string} firstname - Имя сотрудника.
  * @property {string} fathername - Отчество сотрудника.

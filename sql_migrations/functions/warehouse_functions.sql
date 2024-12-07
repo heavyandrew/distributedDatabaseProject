@@ -16,6 +16,97 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Создание накладной
+CREATE OR REPLACE FUNCTION AddSupply(
+    v_from_employee INT
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Supplies (Su_from_employee) 
+    VALUES (v_from_employee);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Обновление накладной
+CREATE OR REPLACE FUNCTION UpdateSupply(
+    v_su_id INT,
+    v_from_employee INT,
+    v_delivery_employee INT,
+    v_apply_employee INT,
+    v_car VARCHAR(9),
+    v_date DATE
+) RETURNS VOID AS $$
+BEGIN
+    IF v_delivery_employee IS NOT NULL AND v_car IS NULL THEN
+        RAISE EXCEPTION 'Поле Su_car должно быть заполнено, если поле Su_delivery_employee задано.';
+    END IF;
+
+    UPDATE Supplies
+    SET 
+        Su_from_employee = v_from_employee,
+        Su_delivery_employee = v_delivery_employee,
+        Su_apply_employee = v_apply_employee,
+        Su_car = v_car,
+        Su_date = v_date
+    WHERE Su_id = v_su_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Добавление запчасти в поставке
+CREATE OR REPLACE FUNCTION AddPartInSupply(
+    v_part_id INT,
+    v_supply_id INT,
+    v_number INT
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO PartsInSupply (PSu_part, PSu_supply, PSu_number)
+    VALUES (v_part_id, v_supply_id, v_number);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Изменение запчасти в поставке
+CREATE OR REPLACE FUNCTION UpdatePartInSupply(
+    v_psu_id INT,
+    v_part_id INT,
+    v_supply_id INT,
+    v_number INT
+) RETURNS VOID AS $$
+BEGIN
+    IF v_number <= 0 THEN
+        RAISE EXCEPTION 'PSu_number должно быть больше нуля.';
+    END IF;
+
+    UPDATE PartsInSupply
+    SET PSu_part = v_part_id,
+        PSu_supply = v_supply_id,
+        PSu_number = v_number
+    WHERE PSu_id = v_psu_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Добавление и изменение запчасти на складе
+CREATE OR REPLACE FUNCTION UpsertPartInStock(
+    v_part_id INT,
+    v_number INT
+) RETURNS VOID AS $$
+BEGIN
+    IF v_number < 0 THEN
+        RAISE EXCEPTION 'PSt_number должно быть не отрицательным.';
+    END IF;
+
+    -- Проверяем, существует ли запись с таким PSt_part
+    IF EXISTS (SELECT 1 FROM PartsInStock WHERE PSt_part = v_part_id) THEN
+        -- Если запись существует, обновляем PSt_number
+        UPDATE PartsInStock
+        SET PSt_number = v_number
+        WHERE PSt_part = v_part_id;
+    ELSE
+        -- Если записи нет, добавляем новую запись
+        INSERT INTO PartsInStock (PSt_part, PSt_number)
+        VALUES (v_part_id, v_number);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Функция для триггера
 CREATE OR REPLACE FUNCTION AfterApplyEmployeeChange() RETURNS TRIGGER AS $$
 DECLARE

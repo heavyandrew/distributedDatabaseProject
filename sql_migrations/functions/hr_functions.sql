@@ -1,5 +1,5 @@
 -- Добавление должности
-CREATE OR REPLACE FUNCTION add_position(new_position VARCHAR)
+CREATE OR REPLACE FUNCTION AddPosition(new_position VARCHAR)
 RETURNS VOID AS $$
 BEGIN
     INSERT INTO Positions (P_name) VALUES (new_position);
@@ -7,7 +7,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Изменение должности
-CREATE OR REPLACE FUNCTION update_position(p_id INT, new_position VARCHAR)
+CREATE OR REPLACE FUNCTION UpdatePosition(p_id INT, new_position VARCHAR)
 RETURNS VOID AS $$
 BEGIN
     UPDATE Positions
@@ -17,7 +17,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Удаление должности
-CREATE OR REPLACE FUNCTION delete_position(p_id INT)
+CREATE OR REPLACE FUNCTION DeletePosition(p_id INT)
 RETURNS VOID AS $$
 BEGIN
     DELETE FROM Positions
@@ -26,7 +26,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Добавление сотрудника
-CREATE OR REPLACE FUNCTION add_employee(
+CREATE OR REPLACE FUNCTION AddEmployee(
     lastname VARCHAR(30),
     name VARCHAR(30),
     patronymic VARCHAR(30),
@@ -63,7 +63,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Изменение сотрудника
-CREATE OR REPLACE FUNCTION update_employee(
+CREATE OR REPLACE FUNCTION UpdateEmployee(
     e_id INT,
     lastname VARCHAR(30),
     name VARCHAR(30),
@@ -93,7 +93,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Увольнение сотрудника
-CREATE OR REPLACE FUNCTION terminate_employee(e_id INT, quit_date DATE DEFAULT CURRENT_DATE)
+CREATE OR REPLACE FUNCTION TerminateEmployee(e_id INT, quit_date DATE DEFAULT CURRENT_DATE)
 RETURNS VOID AS $$
 BEGIN
     UPDATE Employees
@@ -103,7 +103,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Удаление сотрудника
-CREATE OR REPLACE FUNCTION delete_employee(e_id INT) 
+CREATE OR REPLACE FUNCTION DeleteEmployee(e_id INT) 
 RETURNS VOID AS $$
 BEGIN
     DELETE FROM Employees

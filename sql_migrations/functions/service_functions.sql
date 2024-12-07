@@ -72,6 +72,85 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Создание заказа
+CREATE OR REPLACE FUNCTION AddOrder(
+    v_branch_id INT,
+    v_client_id INT,
+    v_employee_id INT,
+    v_device_id INT,
+    v_note VARCHAR(100),
+    v_date DATE DEFAULT CURRENT_DATE
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO Orders (Branch_id, O_client_id, O_status, O_employee, O_device, O_note, O_date, O_final_price)
+    VALUES (
+        v_branch_id,
+        v_client_id,
+        1, -- O_status по умолчанию равен 1
+        v_employee_id,
+        v_device_id,
+        v_note,
+        v_date, -- O_date по умолчанию равен текущей дате
+        0 -- O_final_price по умолчанию равен 0
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+-- Изменение заказа
+CREATE OR REPLACE FUNCTION UpdateOrder(
+    v_branch_id INT,
+    v_order_id INT,
+    v_client_id INT,
+    v_employee_id INT,
+    v_device_id INT,
+    v_note VARCHAR(100)
+) RETURNS VOID AS $$
+BEGIN
+    UPDATE Orders
+    SET
+        O_client_id = v_client_id,
+        O_employee = v_employee_id,
+        O_device = v_device_id,
+        O_note = v_note
+    WHERE Branch_id = v_branch_id AND O_id = v_order_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Добавление услуги в заказ
+CREATE OR REPLACE FUNCTION AddServiceInOrder(
+    v_branch_id INT,
+    v_service_id INT,
+    v_part INT,
+    v_order_id INT
+) RETURNS VOID AS $$
+BEGIN
+    INSERT INTO ServicesInOrders (SO_branch_id, SO_service_id, SO_part, SO_order)
+    VALUES (
+        v_branch_id,
+        v_service_id,
+        v_part,
+        v_order_id
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+-- Изменения услуги в заказе
+CREATE OR REPLACE FUNCTION UpdateServiceInOrder(
+    v_branch_id INT,
+    v_so_id INT,
+    v_service_id INT,
+    v_part INT,
+    v_order_id INT
+) RETURNS VOID AS $$
+BEGIN
+    UPDATE ServicesInOrders
+    SET SO_service_id = v_service_id,
+        SO_part = v_part,
+        SO_order = v_order_id
+    WHERE SO_branch_id = v_branch_id AND SO_id = v_so_id;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Добавление заявки на поставку
 CREATE OR REPLACE FUNCTION CreateSupplyRequest(
     p_branch_id INT,

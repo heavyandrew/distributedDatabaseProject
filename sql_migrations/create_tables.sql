@@ -165,13 +165,14 @@ CREATE TABLE PartsInService (
 -- Table: ServicesInOrders
 CREATE TABLE ServicesInOrders (
     SO_id INT NOT NULL,
+    SO_branch_id INT NOT NULL,
     SO_service_id INT,
     SO_part INT,
     SO_order INT NOT NULL,
-    PRIMARY KEY (SO_service_id, SO_id),
+    PRIMARY KEY (SO_branch_id, SO_id),
     CONSTRAINT fk_service FOREIGN KEY (SO_service_id) REFERENCES Services(S_id),
     CONSTRAINT fk_part FOREIGN KEY (SO_service_id, SO_part) REFERENCES PartsInService(PS_service_id, PS_id),
-    CONSTRAINT fk_order FOREIGN KEY (SO_service_id, SO_order) REFERENCES Orders(Branch_id, O_id)
+    CONSTRAINT fk_order FOREIGN KEY (SO_branch_id, SO_order) REFERENCES Orders(Branch_id, O_id)
 );
 
 -- Table: SupplyRequests

@@ -136,4 +136,5 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trg_AfterApplyEmployeeChange
 AFTER UPDATE OF Su_apply_employee ON Supplies
 FOR EACH ROW
+EXECUTE PROCEDURE AfterApplyEmployeeChange();
 

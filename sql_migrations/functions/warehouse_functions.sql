@@ -111,6 +111,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION AfterApplyEmployeeChange() RETURNS TRIGGER AS $$
 DECLARE
     v_service_id INT;
+    record RECORD;
 BEGIN
     -- Проверяем, если Su_apply_employee стало не NULL
     IF OLD.Su_apply_employee IS NULL AND NEW.Su_apply_employee IS NOT NULL THEN

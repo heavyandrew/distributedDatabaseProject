@@ -7,21 +7,21 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Изменение должности
-CREATE OR REPLACE FUNCTION UpdatePosition(p_id INT, new_position VARCHAR)
+CREATE OR REPLACE FUNCTION UpdatePosition(pos_id INT, new_position VARCHAR)
 RETURNS VOID AS $$
 BEGIN
     UPDATE Positions
     SET P_name = new_position
-    WHERE P_id = p_id;
+    WHERE P_id = pos_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Удаление должности
-CREATE OR REPLACE FUNCTION DeletePosition(p_id INT)
+CREATE OR REPLACE FUNCTION DeletePosition(pos_id INT)
 RETURNS VOID AS $$
 BEGIN
     DELETE FROM Positions
-    WHERE P_id = p_id;
+    WHERE P_id = pos_id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -64,7 +64,7 @@ $$ LANGUAGE plpgsql;
 
 -- Изменение сотрудника
 CREATE OR REPLACE FUNCTION UpdateEmployee(
-    e_id INT,
+    emp_id INT,
     lastname VARCHAR(30),
     name VARCHAR(30),
     patronymic VARCHAR(30),
@@ -88,25 +88,25 @@ BEGIN
         E_service = service,
         E_hiring_date = hiring_date,
         E_quit_date = quit_date
-    WHERE E_id = e_id;
+    WHERE E_id = emp_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Увольнение сотрудника
-CREATE OR REPLACE FUNCTION TerminateEmployee(e_id INT, quit_date DATE DEFAULT CURRENT_DATE)
+CREATE OR REPLACE FUNCTION TerminateEmployee(emp_id INT, quit_date DATE DEFAULT CURRENT_DATE)
 RETURNS VOID AS $$
 BEGIN
     UPDATE Employees
     SET E_quit_date = quit_date
-    WHERE E_id = e_id;
+    WHERE E_id = emp_id;
 END;
 $$ LANGUAGE plpgsql;
 
 -- Удаление сотрудника
-CREATE OR REPLACE FUNCTION DeleteEmployee(e_id INT) 
+CREATE OR REPLACE FUNCTION DeleteEmployee(emp_id INT) 
 RETURNS VOID AS $$
 BEGIN
     DELETE FROM Employees
-    WHERE E_id = e_id;
+    WHERE E_id = emp_id;
 END;
 $$ LANGUAGE plpgsql;

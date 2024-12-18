@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE user_roles (
     role_name VARCHAR(50) PRIMARY KEY, -- Название роли
     description TEXT                   -- Описание задачи роли
@@ -186,3 +188,5 @@ INSERT INTO role_permissions (role_name, object_name, privilege) VALUES
 ('service_employee', 'CalculateFinalPrice', 'EXECUTE'),
 
 ('service_employee', 'CheckServiceEmployee', 'EXECUTE');
+
+COMMIT;

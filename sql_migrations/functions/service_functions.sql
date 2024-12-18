@@ -168,6 +168,7 @@ $$ LANGUAGE plpgsql;
 -- Вычисление итоговой цены
 CREATE OR REPLACE PROCEDURE CalculateFinalPrice(v_order_id INT, v_branch_id INT) AS $$
 DECLARE
+    service RECORD;
     v_final_price DECIMAL(10, 2) := 0; 
 BEGIN
     -- Ищем все записи в ServicesInOrders для данного заказа

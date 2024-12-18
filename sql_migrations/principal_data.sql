@@ -41,6 +41,22 @@ VALUES
     ('Microsoft', 'Амиканская технологическая компания, известная разработкой операционной системы Windows и производством устройств Surface.'),
     ('Samsung',   'Корейский многопрофильный конгломерат, производящий различные электронные устройства, включая ноутбуки и ПК с операционной системой Windows.');; 
 
+-- Клиенты
+INSERT INTO Clients
+    (Branch_id, S_id, S_name, S_phone, S_email, C_num_counter)
+VALUES
+    (2, 1, 'Иван Иванов', '+7 123 456-78-90', 'ivan.ivanov@example.com', 0),
+    (2, 2, 'Анна Петрова', '+7 234 567-89-01', 'anna.petrova@example.com', 0),
+    (2, 3, 'Сергей Смирнов', '+7 345 678-90-12', 'sergey.smirnov@example.com', 0),
+    (2, 4, 'Мария Кузнецова', '+7 456 789-01-23', 'maria.kuznetsova@example.com', 0),
+    (2, 5, 'Дмитрий Попов', '+7 567 890-12-34', 'dmitry.popov@example.com', 0),
+    (2, 6, 'Елена Васильева', '+7 678 901-23-45', 'elena.vasilieva@example.com', 0),
+    (3, 1, 'Иванов Петр Иванович',            '+7 (910) 123-45-67', 'iiivanov@example.com',     0),
+    (3, 2, 'Петрова Анна Сергеевна',          '+7 (910) 234-56-78', 'aspetrova@example.com',    0),
+    (3, 3, 'Сидоров Алексей Петрович',        '+7 (910) 345-67-89', 'apsidorov@example.com',    0),
+    (3, 4, 'Кузнецова Светлана Вячеславовна', '+7 (910) 456-78-90', 'svkuznetsova@example.com', 0),
+    (3, 5, 'Смирнов Сергей Николаевич',       '+7 (910) 567-89-01', 'sssmirnov@example.com',    0);
+
 -- Модели устройств
 INSERT INTO Models
     (M_type, M_brand, M_name, M_description)

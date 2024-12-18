@@ -64,17 +64,17 @@ VALUES
 
 -- Услуги в заказах
 INSERT INTO ServicesInOrders
-    (SO_service_id, SO_id, SO_part, SO_order)
+    (SO_service_id, SO_branch_id, SO_id, SO_part, SO_order)
 VALUES
-    (2, 1, NULL, 1), --первый заказ
-    (2, 2, NULL, 1), --первый заказ
-    (2, 3, NULL, 2),
-    (2, 4, 4, 3),
-    (2, 5, NULL, 4),
-    (2, 6, 3, 5),
-    (2, 7, NULL, 6),
-    (2, 8, NULL, 7),
-    (2, 9, NULL, 8);
+    (2, 2, 1, NULL, 1), --первый заказ
+    (2, 2, 2, NULL, 1), --первый заказ
+    (2, 2, 3, NULL, 2),
+    (2, 2, 4, 4, 3),
+    (2, 2, 5, NULL, 4),
+    (2, 2, 6, 3, 5),
+    (2, 2, 7, NULL, 6),
+    (2, 2, 8, NULL, 7),
+    (2, 2, 9, NULL, 8);
 
 
 -- Заявки на поставку --zap4act nomer 3

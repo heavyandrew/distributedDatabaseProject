@@ -47,13 +47,13 @@ VALUES
 
 -- Услуги в заказах
 INSERT INTO ServicesInOrders
-    (SO_service_id, SO_id, SO_part, SO_order)
+    (SO_service_id, SO_branch_id, SO_id, SO_part, SO_order)
 VALUES
-    (3, 1, 1, 1),
-    (3, 2, 2, 2),
-    (3, 3, NULL, 3),
-    (3, 4, NULL, 4),
-    (3, 5, NULL, 5);
+    (3, 3, 1, 1, 1),
+    (3, 3, 2, 2, 2),
+    (3, 3, 3, NULL, 3),
+    (3, 3, 4, NULL, 4),
+    (3, 3, 5, NULL, 5);
 
 -- Отзывы
 INSERT INTO Reviews

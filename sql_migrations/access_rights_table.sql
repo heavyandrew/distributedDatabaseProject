@@ -71,10 +71,10 @@ INSERT INTO role_permissions (role_name, object_name, privilege) VALUES
 
 
 -- Главный технический инженер
-('chief_technical_engineer', 'DevicesTypes', 'SELECT'),
-('chief_technical_engineer', 'DevicesTypes', 'INSERT'),
-('chief_technical_engineer', 'DevicesTypes', 'UPDATE'),
-('chief_technical_engineer', 'DevicesTypes', 'DELETE'),
+('chief_technical_engineer', 'DeviceTypes', 'SELECT'),
+('chief_technical_engineer', 'DeviceTypes', 'INSERT'),
+('chief_technical_engineer', 'DeviceTypes', 'UPDATE'),
+('chief_technical_engineer', 'DeviceTypes', 'DELETE'),
 
 ('chief_technical_engineer', 'PartTypes', 'SELECT'),
 ('chief_technical_engineer', 'PartTypes', 'INSERT'),
@@ -142,7 +142,6 @@ INSERT INTO role_permissions (role_name, object_name, privilege) VALUES
 ('warehouse_employee', 'AddPartInSupply', 'EXECUTE'),
 ('warehouse_employee', 'UpdatePartInSupply', 'EXECUTE'),
 ('warehouse_employee', 'UpsertPartInStock', 'EXECUTE'),
-('warehouse_employee', 'AfterApplyEmployeeChange', 'EXECUTE'),
 
 
 -- Сотрудник сервиса
@@ -185,7 +184,6 @@ INSERT INTO role_permissions (role_name, object_name, privilege) VALUES
 ('service_employee', 'UpdateServiceInOrder', 'EXECUTE'),
 
 ('service_employee', 'CreateSupplyRequest', 'EXECUTE'),
-('service_employee', 'CalculateFinalPrice', 'EXECUTE'),
 
 ('service_employee', 'CheckServiceEmployee', 'EXECUTE');
 
